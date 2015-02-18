@@ -56,6 +56,9 @@
   "yui"           : false,
   "globals": {
     "Mn": true,
+    "Bb": true,
+    "_": true,
+    "$": true,
     "console": true,
     "sinon": true,
     "spy": true,

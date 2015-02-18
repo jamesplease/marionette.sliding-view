@@ -1,13 +1,16 @@
 import _ from 'underscore';
-import Bb from 'backbone';
 import $ from 'jquery';
+import Bb from 'backbone';
 Bb.$ = $;
 import Mn from 'backbone.marionette';
 import '../../src/marionette.sliding-view';
 
+global._ = _;
+global.$ = $;
+global.Bb = Bb;
 global.Mn = Mn;
 
-module.exports = function() {
+export default function() {
   global.expect = global.chai.expect;
 
   beforeEach(function() {
