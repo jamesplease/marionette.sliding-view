@@ -5,7 +5,7 @@
 [![Dependency Status](https://david-dm.org/jmeas/marionette.sliding-view.svg)](https://david-dm.org/jmeas/marionette.sliding-view)
 [![devDependency Status](https://david-dm.org/jmeas/marionette.sliding-view/dev-status.svg)](https://david-dm.org/jmeas/marionette.sliding-view#info=devDependencies)
 
-A simple sliding Collection View in Marionette.
+A sliding Collection View in Marionette.
 
 ### Motivation
 

@@ -1,7 +1,7 @@
 {
   "name": "marionette.sliding-view",
   "version": "0.0.1",
-  "description": "A simple sliding Collection View in Marionette.",
+  "description": "A sliding Collection View in Marionette.",
   "main": "dist/marionette.sliding-view.js",
   "scripts": {
     "test": "gulp",
