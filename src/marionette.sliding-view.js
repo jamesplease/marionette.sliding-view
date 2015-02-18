@@ -25,8 +25,8 @@ Mn.SlidingView = Mn.CollectionView.extend({
     Mn.CollectionView.prototype.constructor.apply(this, arguments);
 
     // Get our initial boundaries, and then update the collection
-    this.lowerBound = _.result(this, 'initialLowerBound');
-    this.upperBound = _.result(this, 'initialUpperBound');
+    this._lowerBound = _.result(this, 'initialLowerBound');
+    this._upperBound = _.result(this, 'initialUpperBound');
     this._updateCollection();
 
     // If no throttled scroll handler was defined, then we set one
@@ -68,20 +68,20 @@ Mn.SlidingView = Mn.CollectionView.extend({
     // that queued render. This prevents users who are scrolling very fast
     // from getting too many renders at once. It won't render until they've
     // slowed down a bit.
-    if (lowerBound !== this.lowerBound || upperBound !== this.upperBound) {
+    if (lowerBound !== this._lowerBound || upperBound !== this._upperBound) {
       if (this._deferredUpdateId) {
         clearTimeout(this._deferredUpdateId);
       }
     }
 
     // If the boundaries are unchanged, then we bail out early
-    if (lowerBound === this.lowerBound && upperBound === this.upperBound) {
+    if (lowerBound === this._lowerBound && upperBound === this._upperBound) {
       return;
     }
 
     // Update our indices
-    this.lowerBound = lowerBound;
-    this.upperBound = upperBound;
+    this._lowerBound = lowerBound;
+    this._upperBound = upperBound;
 
     // Defer an update for 50ms. This prevents many renders when scrolling fast.
     this._deferredUpdateId = setTimeout(() => {
@@ -108,6 +108,6 @@ Mn.SlidingView = Mn.CollectionView.extend({
   // 2. CollectionView performs a 'smart' update of the view layer
   //    whenever the data layer changes
   _updateCollection() {
-    this.collection.set(this.pruneCollection());
+    this.collection.set(this.pruneCollection(this._lowerBound, this._upperBound));
   }
 });

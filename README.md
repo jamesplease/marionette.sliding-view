@@ -71,7 +71,7 @@ When overriding this method, use the `onUpdateHandler` method as your callback f
 var MySlidingView = Mn.SlidingView.extend({
 
   // Update whenever a model changes
-  registerScrollEvent: function() {
+  registerUpdateEvent: function() {
     var self = this;
     this.listenTo(someModel, 'change', function() {
       self.onUpdateEvent();

@@ -10,8 +10,8 @@ describe('Initial boundaries', () => {
         initialLowerBound: 3,
         initialUpperBound: 4,
 
-        pruneCollection() {
-          return this.referenceCollection.slice(this.lowerBound, this.upperBound);
+        pruneCollection(lowerBound, upperBound) {
+          return this.referenceCollection.slice(lowerBound, upperBound);
         }
       });
 
@@ -42,8 +42,8 @@ describe('Initial boundaries', () => {
           return 4;
         },
 
-        pruneCollection() {
-          return this.referenceCollection.slice(this.lowerBound, this.upperBound);
+        pruneCollection(lowerBound, upperBound) {
+          return this.referenceCollection.slice(lowerBound, upperBound);
         }
       });
 
