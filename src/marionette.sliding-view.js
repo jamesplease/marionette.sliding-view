@@ -17,9 +17,7 @@ Mn.SlidingView = Mn.CollectionView.extend({
       this.referenceCollection = options.referenceCollection;
     }
 
-    // Set the collection to be an empty collection,
-    // and then delete the collection passed in as an
-    // option, if one was
+    // Set the collection to be a new empty collection
     this.collection = new Backbone.Collection();
 
     Mn.CollectionView.prototype.constructor.apply(this, arguments);
@@ -41,7 +39,7 @@ Mn.SlidingView = Mn.CollectionView.extend({
 
   // Register the event that calls the onUpdateEvent method. The default
   // is to listen to the view's own scroll event, but it could just
-  // as easily listen to another element's scroll event, too.
+  // as easily listen to any event.
   registerUpdateEvent() {
 
     // Execute the throttled callback on scroll
@@ -50,13 +48,13 @@ Mn.SlidingView = Mn.CollectionView.extend({
     });
   },
 
-  // What we use to throttle the scroll event. Use
+  // What we use to throttle the update event callback. Use
   // requestAnimationFrame for better performance
   throttle(cb) {
     return _.throttle(cb, 1000/60);
   },
 
-  // Called at 60fps within the scroll handler
+  // Called at 60fps whenever the update event occurs
   throttledUpdateHandler() {
 
     // Pass along our arguments to the methods that calculate our boundaries
@@ -95,7 +93,7 @@ Mn.SlidingView = Mn.CollectionView.extend({
   getUpperBound() {},
 
   // Use the boundaries calculated in `onUpdateEvent` to prune
-  // your collection to only the ones that you wish to show. Return
+  // your collection to only the models that you wish to show. Return
   // an array of models to be set on the collection. The default is
   // to just return all of the models
   pruneCollection() {
