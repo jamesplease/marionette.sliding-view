@@ -60,8 +60,8 @@ Mn.SlidingView = Mn.CollectionView.extend({
   throttledScrollHandler() {
 
     // Pass along our arguments to the methods that calculate our boundaries
-    var lowerBound = this.getLowerBound(...arguments);
-    var upperBound = this.getUpperBound(...arguments);
+    var lowerBound = this.getLowerBound();
+    var upperBound = this.getUpperBound(lowerBound);
 
     // We need to render if either of the boundaries have changed. If this is
     // the case, and there's already a render in the queue, then we cancel out

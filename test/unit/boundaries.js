@@ -18,13 +18,14 @@ describe('When boundary methods are specified, and the throttled method is calle
       },
       getUpperBound() {
         return 2;
-      },
+      }
     });
 
     slidingView = new SlidingView({
       referenceCollection: collection
     });
 
+    stub(slidingView, 'getUpperBound');
     spy(slidingView, '_updateCollection');
   });
 
@@ -39,6 +40,12 @@ describe('When boundary methods are specified, and the throttled method is calle
 
     it('should not update the collection', () => {
       expect(slidingView._updateCollection).to.not.have.been.called;
+    });
+
+    it('should pass the lower bound to the upperBound call', () => {
+      expect(slidingView.getUpperBound)
+        .to.have.been.calledOnce
+        .and.calledWith(1);
     });
   });
 
