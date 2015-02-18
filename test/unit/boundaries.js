@@ -18,13 +18,14 @@ describe('When boundary methods are specified, and the throttled method is calle
       },
       getUpperBound() {
         return 2;
-      },
+      }
     });
 
     slidingView = new SlidingView({
       referenceCollection: collection
     });
 
+    stub(slidingView, 'getUpperBound');
     spy(slidingView, '_updateCollection');
   });
 
@@ -34,17 +35,23 @@ describe('When boundary methods are specified, and the throttled method is calle
 
   describe('and no time has passing', () => {
     beforeEach(() => {
-      slidingView.throttledScrollHandler();
+      slidingView.throttledUpdateHandler();
     });
 
     it('should not update the collection', () => {
       expect(slidingView._updateCollection).to.not.have.been.called;
     });
+
+    it('should pass the lower bound to the upperBound call', () => {
+      expect(slidingView.getUpperBound)
+        .to.have.been.calledOnce
+        .and.calledWith(1);
+    });
   });
 
   describe('and 20ms has passed', () => {
     beforeEach(() => {
-      slidingView.throttledScrollHandler();
+      slidingView.throttledUpdateHandler();
       clock.tick(20);
     });
 
@@ -55,7 +62,7 @@ describe('When boundary methods are specified, and the throttled method is calle
 
   describe('and 50ms has passed', () => {
     beforeEach(() => {
-      slidingView.throttledScrollHandler();
+      slidingView.throttledUpdateHandler();
       clock.tick(50);
     });
 
@@ -70,10 +77,10 @@ describe('When boundary methods are specified, and the throttled method is calle
 
   describe('and the callback is called quickly, but the boundaries do not change', () => {
     beforeEach(() => {
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
       clock.tick(50);
     });
 
@@ -93,11 +100,11 @@ describe('When boundary methods are specified, and the throttled method is calle
       };
 
       spy(global, 'clearTimeout');
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
       clock.tick(50);
     });
 

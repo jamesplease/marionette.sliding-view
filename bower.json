@@ -1,0 +1,39 @@
+{
+  "name": "marionette.sliding-view",
+  "version": "0.0.1",
+  "homepage": "https://github.com/jmeas/marionette.sliding-view",
+  "authors": [
+    "Jmeas <jellyes2@gmail.com>"
+  ],
+  "description": "A sliding Collection View in Marionette.",
+  "main": "dist/marionette.sliding-view.js",
+  "keywords": [
+    "backbone",
+    "marionette",
+    "backbone.marionette",
+    "slickgrid",
+    "slick",
+    "grid",
+    "sliding",
+    "infinite",
+    "scroll",
+    "view",
+    "collection",
+    "efficient",
+    "render",
+    "list"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "underscore": "1.4.4 - 1.7.0",
+    "backbone": "1.1.0 - 1.1.2",
+    "backbone.marionette": "^2.0.0"
+  }
+}
