@@ -1,4 +1,4 @@
-var slidingView, collection;
+var SlidingView, slidingView, collection;
 
 describe('SlidingView options', () => {
   describe('when passing a `collection` option', () => {
@@ -20,6 +20,20 @@ describe('SlidingView options', () => {
     });
 
     it('should accept the option', () => {
+      expect(slidingView.referenceCollection).to.deep.equal(collection);
+    });
+  });
+
+  describe('when not passing a `referenceCollection`, but defining it on the prototype', () => {
+    beforeEach(() => {
+      collection = new Bb.Collection();
+      SlidingView = Mn.SlidingView.extend({
+        referenceCollection: collection
+      });
+      slidingView = new SlidingView();
+    });
+
+    it('should use the one on the prototype', () => {
       expect(slidingView.referenceCollection).to.deep.equal(collection);
     });
   });

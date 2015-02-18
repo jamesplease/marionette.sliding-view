@@ -35,6 +35,10 @@
     "url": "https://github.com/jmeas/marionette.sliding-view/issues"
   },
   "homepage": "https://github.com/jmeas/marionette.sliding-view",
+  "dependencies": {
+    "backbone": "1.1.0 - 1.1.2",
+    "backbone.marionette": "^2.0.0"
+  },
   "devDependencies": {
     "babel": "^4.3.0",
     "babelify": "^5.0.3",
@@ -74,13 +78,8 @@
     "entryFileName": "marionette.sliding-view.js",
     "exportVarName": "none",
     "mochaGlobals": [
-      "stub",
-      "spy",
-      "expect"
+      "stub", "spy", "expect",
+      "_", "$", "Bb", "Mn"
     ]
-  },
-  "dependencies": {
-    "backbone": "1.1.0 - 1.1.2",
-    "backbone.marionette": "^2.0.0"
   }
 }

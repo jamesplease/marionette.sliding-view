@@ -1,3 +1,5 @@
+/* jshint debug: true */
+
 import Backbone from 'backbone';
 import Mn from 'backbone.marionette';
 
@@ -12,14 +14,16 @@ Mn.SlidingView = Mn.CollectionView.extend({
     }
 
     // Store the referenceCollection on the SlidingView
-    this.referenceCollection = options.referenceCollection;
+    if (options.referenceCollection) {
+      this.referenceCollection = options.referenceCollection;
+    }
 
     // Set the collection to be an empty collection,
     // and then delete the collection passed in as an
     // option, if one was
     this.collection = new Backbone.Collection();
 
-    Mn.CollectionView.prototype.constructor.apply(this, arguments);
+    Mn.CollectionView.prototype.constructor(this, ...arguments);
 
     // Get our initial boundaries, and then update the collection
     this.lowerBound = this.getInitialLowerBound(...arguments);
@@ -30,7 +34,7 @@ Mn.SlidingView = Mn.CollectionView.extend({
   // Register the event that calls the onScroll method. The default
   // is to listen to the view's own scroll event, but it could just
   // as easily listen to another element's scroll event, too.
-  registerSlideEvent() {
+  registerScrollEvent() {
     this.$el.on('scroll', this.onScroll);
   },
 
