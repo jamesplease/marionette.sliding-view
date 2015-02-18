@@ -4,13 +4,13 @@ describe('When scrolling', () => {
   beforeEach(() => {
     clock = sinon.useFakeTimers();
     collection = new Bb.Collection([{},{},{},{},{}]);
-    stub(Mn.SlidingView.prototype, 'throttledScrollHandler');
+    stub(Mn.SlidingView.prototype, 'throttledUpdateHandler');
 
     slidingView = new Mn.SlidingView({
       referenceCollection: collection
     });
 
-    spy(slidingView, 'onScroll');
+    spy(slidingView, 'onUpdateEvent');
   });
 
   afterEach(() => {
@@ -23,11 +23,11 @@ describe('When scrolling', () => {
     });
 
     it('should call the throttled callback once', () => {
-      expect(slidingView.onScroll).to.have.been.calledOnce;
+      expect(slidingView.onUpdateEvent).to.have.been.calledOnce;
     });
 
     it('should call the scroll callback once', () => {
-      expect(slidingView.throttledScrollHandler).to.have.been.calledOnce;
+      expect(slidingView.throttledUpdateHandler).to.have.been.calledOnce;
     });
   });
 
@@ -37,11 +37,11 @@ describe('When scrolling', () => {
     });
 
     it('should call the throttled callback 6 times', () => {
-      expect(slidingView.onScroll).to.have.callCount(6);
+      expect(slidingView.onUpdateEvent).to.have.callCount(6);
     });
 
     it('should call the scroll callback once', () => {
-      expect(slidingView.throttledScrollHandler).to.have.been.calledOnce;
+      expect(slidingView.throttledUpdateHandler).to.have.been.calledOnce;
     });
   });
 
@@ -56,11 +56,11 @@ describe('When scrolling', () => {
     });
 
     it('should call the throttled callback 3 times', () => {
-      expect(slidingView.onScroll).to.have.been.calledThrice;
+      expect(slidingView.onUpdateEvent).to.have.been.calledThrice;
     });
 
     it('should call the scroll callback thrice', () => {
-      expect(slidingView.throttledScrollHandler).to.have.been.calledThrice;
+      expect(slidingView.throttledUpdateHandler).to.have.been.calledThrice;
     });
   });
 
@@ -75,13 +75,13 @@ describe('When scrolling', () => {
     });
 
     it('should call the throttled callback 9 times', () => {
-      expect(slidingView.onScroll).to.have.callCount(9);
+      expect(slidingView.onUpdateEvent).to.have.callCount(9);
     });
 
     // The fourth time is because Underscore queues up an extra
     // call during the third batch of scrolls
     it('should call the scroll callback four time', () => {
-      expect(slidingView.throttledScrollHandler).to.have.callCount(4);
+      expect(slidingView.throttledUpdateHandler).to.have.callCount(4);
     });
   });
 });

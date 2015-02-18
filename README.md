@@ -7,3 +7,154 @@
 
 A simple sliding Collection View in Marionette.
 
+### Motivation
+
+Some Collections contain many, many items, and rendering them all at once with a Marionette.CollectionView
+can take far too long. A 'sliding' CollectionView only displays some of the models at once (typically, only those
+visible), giving you fast load times even as the number of items goes into the tens of thousands.
+
+### Getting Started
+
+This is a more complex view class. Accordingly, it may take some time to fully understand the API it provides.
+Once you've got it down, though, you should find that it's a really powerful View to use in your applications.
+
+#### Concepts
+
+There are a few important concepts to understand when using the SlidingView.
+
+##### Reference Collection
+
+A SlidingView has two collections: `collection` and `referenceCollection`. The `collection`
+represents the models that are currently being displayed. The `referenceCollection` is the
+full list of models that the SlidingView represents.
+
+##### Update Event
+
+The SlidingView updates what is displayed whenever the "update event" occurs. By default,
+the "update event" is the scroll event on the SlidingView's element.
+
+Although the update event is typically a scroll event, it could be anything at all.
+
+##### Lower and Upper Boundaries
+
+The SlidingView has two internal properties: `lowerBound` and `upperBound`. These
+are two properties that can be used to determine which models from the reference collection
+should be displayed at any given time.
+
+There are two hooks that are used to set the boundaries, and they are called everytime that
+the update event occurs.
+
+### API
+
+##### `constructor( [options] )`
+
+A `CollectionView` typically receives a `collection` as an option. SlidingView is different in that you
+**do not** pass in a `collection`. Instead, pass in a `referenceCollection`. This is the full list
+of models. The `collection` attribute will be created for you, and will be kept up-to-date with the
+current models to display in the View.
+
+You can either pass the `referenceCollection` as an option, or specify it on the prototype.
+
+##### `registerUpdateEvent()`
+
+A hook that lets you register when to call the `onUpdateEvent` method. By default,
+the SlidingView listens to `scroll` events on its own element. By overriding this,
+you could make it update its collection when another element (like a parent) is scrolled,
+or any time any event occurs.
+
+When overriding this method, use the `onUpdateHandler` method as your callback for the event.
+
+```js
+var MySlidingView = Mn.SlidingView.extend({
+
+  // Listen to the scroll event on a Radio channel
+  registerScrollEvent: function() {
+    var self = this;
+    this.listenTo(Backbone.Radio.channel('parentView'), 'scroll', function() {
+      self.onUpdateEvent();
+    });
+  }
+});
+```
+
+##### `onUpdateEvent()`
+
+A callback that is executed every time the registered update event happens. The purpose
+of this callback is to throttle the *true* callback to the event, which is
+`throttledScrollHandler`.
+
+The default behavior is to throttle the `throttledUpdateHandler` method using the `throttle`
+method on the SlidingView.
+
+For a big performance boost, you are highly encouraged to override this method to use
+`requestAnimationFrame`.
+
+```js
+var MySlidingView = Mn.SlidingView.extend({
+
+  // Use requestAnimationFrame for a big performance boost!
+  onUpdateEvent: function() {
+    var self = this;
+    requestAnimationFrame(function() {
+      self.throttledScrollHandler();
+    });
+  }
+});
+```
+
+##### `throttle( fn )`
+
+If you're not using `requestAnimationFrame` (you should be!), then you can specify how
+to throttle `fn` here. The default implementation is to use `_.throttle` at 60 fps.
+
+Note that if you **are** using `requestAnimationFrame`, then you can ignore this method
+entirely.
+
+##### `pruneCollection(lowerBound, upperBound)`
+
+Use the values of `lowerBound` and `upperBound` to calculate a list of models to be
+`set` on the SlidingView's `collection`. By default, all of the models from
+`referenceCollection` are returned.
+
+If your upper and lower boundaries reference indices, then you could `slice` your collection
+to return just the models within those indices.
+
+```js
+var MySlidingView = Mn.SlidingView.extend({
+  pruneCollection: function(lowerBound, upperBound) {
+    return this.referenceCollection.slice(lowerBound, upperBound)
+  }
+});
+```
+
+##### `initialLowerBound`
+
+The initial lower boundary for the SlidingView. It can be a flat value or a function.
+
+```js
+var MySlidingView = Mn.SlidingView.extend({
+  initialLowerBound: 3
+});
+```
+
+##### `initialUpperBound`
+
+The initial upper boundary for the SlidingView. It can be a flat value or a function.
+
+```js
+var MySlidingView = Mn.SlidingView.extend({
+  initialLowerBound: function() {
+    return 5;
+  }
+});
+```
+
+##### `getLowerBound()`
+
+A function that is called each time the update event occurs. Within this method
+you should calculate the new value of the `lowerBound` and return it.
+
+##### `getUpperBound( lowerBound )`
+
+Similar to the above, but for the upper boundary. It is passed the `lowerBound` that
+was just computed, if you need to use that as a reference.

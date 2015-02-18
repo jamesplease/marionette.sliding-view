@@ -10,7 +10,7 @@ describe('Initial boundaries', () => {
         initialLowerBound: 3,
         initialUpperBound: 4,
 
-        filterCollection() {
+        pruneCollection() {
           return this.referenceCollection.slice(this.lowerBound, this.upperBound);
         }
       });
@@ -42,7 +42,7 @@ describe('Initial boundaries', () => {
           return 4;
         },
 
-        filterCollection() {
+        pruneCollection() {
           return this.referenceCollection.slice(this.lowerBound, this.upperBound);
         }
       });

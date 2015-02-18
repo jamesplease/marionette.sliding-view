@@ -35,7 +35,7 @@ describe('When boundary methods are specified, and the throttled method is calle
 
   describe('and no time has passing', () => {
     beforeEach(() => {
-      slidingView.throttledScrollHandler();
+      slidingView.throttledUpdateHandler();
     });
 
     it('should not update the collection', () => {
@@ -51,7 +51,7 @@ describe('When boundary methods are specified, and the throttled method is calle
 
   describe('and 20ms has passed', () => {
     beforeEach(() => {
-      slidingView.throttledScrollHandler();
+      slidingView.throttledUpdateHandler();
       clock.tick(20);
     });
 
@@ -62,7 +62,7 @@ describe('When boundary methods are specified, and the throttled method is calle
 
   describe('and 50ms has passed', () => {
     beforeEach(() => {
-      slidingView.throttledScrollHandler();
+      slidingView.throttledUpdateHandler();
       clock.tick(50);
     });
 
@@ -77,10 +77,10 @@ describe('When boundary methods are specified, and the throttled method is calle
 
   describe('and the callback is called quickly, but the boundaries do not change', () => {
     beforeEach(() => {
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
       clock.tick(50);
     });
 
@@ -100,11 +100,11 @@ describe('When boundary methods are specified, and the throttled method is calle
       };
 
       spy(global, 'clearTimeout');
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
-      slidingView.throttledScrollHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
+      slidingView.throttledUpdateHandler();
       clock.tick(50);
     });
 

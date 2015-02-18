@@ -31,22 +31,22 @@ Mn.SlidingView = Mn.CollectionView.extend({
 
     // If no throttled scroll handler was defined, then we set one
     // using the `throttle` method.
-    if (!this.onScroll) {
-      this.onScroll = this.throttle(this.throttledScrollHandler);
+    if (!this.onUpdateEvent) {
+      this.onUpdateEvent = this.throttle(this.throttledUpdateHandler);
     }
 
     // Listen to scroll events to continuously update the collection
-    this.registerScrollEvent();
+    this.registerUpdateEvent();
   },
 
-  // Register the event that calls the onScroll method. The default
+  // Register the event that calls the onUpdateEvent method. The default
   // is to listen to the view's own scroll event, but it could just
   // as easily listen to another element's scroll event, too.
-  registerScrollEvent() {
+  registerUpdateEvent() {
 
     // Execute the throttled callback on scroll
     this.$el.on('scroll', () => {
-      this.onScroll();
+      this.onUpdateEvent();
     });
   },
 
@@ -57,7 +57,7 @@ Mn.SlidingView = Mn.CollectionView.extend({
   },
 
   // Called at 60fps within the scroll handler
-  throttledScrollHandler() {
+  throttledUpdateHandler() {
 
     // Pass along our arguments to the methods that calculate our boundaries
     var lowerBound = this.getLowerBound();
@@ -94,20 +94,20 @@ Mn.SlidingView = Mn.CollectionView.extend({
   getLowerBound() {},
   getUpperBound() {},
 
-  // Use the boundaries calculated in `onScroll` to filter down
+  // Use the boundaries calculated in `onUpdateEvent` to prune
   // your collection to only the ones that you wish to show. Return
   // an array of models to be set on the collection. The default is
   // to just return all of the models
-  filterCollection() {
+  pruneCollection() {
     return this.referenceCollection.models;
   },
 
-  // Update the collection with the results of `filterCollection`
+  // Update the collection with the results of `pruneCollection`
   // This leverages two important facts:
   // 1. Collection#set performs a 'smart' update at the data layer
   // 2. CollectionView performs a 'smart' update of the view layer
   //    whenever the data layer changes
   _updateCollection() {
-    this.collection.set(this.filterCollection());
+    this.collection.set(this.pruneCollection());
   }
 });
