@@ -8,7 +8,20 @@
   "description": "A sliding Collection View in Marionette.",
   "main": "dist/marionette.sliding-view.js",
   "keywords": [
-    "backbone"
+    "backbone",
+    "marionette",
+    "backbone.marionette",
+    "slickgrid",
+    "slick",
+    "grid",
+    "sliding",
+    "infinite",
+    "scroll",
+    "view",
+    "collection",
+    "efficient",
+    "render",
+    "list"
   ],
   "license": "MIT",
   "ignore": [

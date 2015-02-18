@@ -1,3 +1,3 @@
-### [v0.0.1]()
+### [v0.0.1](https://github.com/jmeas/marionette.sliding-view/releases/tag/v0.0.0)
 
-- Unreleased
+- First release
