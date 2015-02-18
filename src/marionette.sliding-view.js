@@ -1,5 +1,6 @@
 /* jshint debug: true */
 
+import _ from 'underscore';
 import Backbone from 'backbone';
 import Mn from 'backbone.marionette';
 
@@ -29,26 +30,36 @@ Mn.SlidingView = Mn.CollectionView.extend({
     this.lowerBound = this.getInitialLowerBound(...arguments);
     this.upperBound = this.getInitialUpperBound(...arguments);
     this._updateCollection();
+
+    // If no throttled scroll handler was defined, then we set one
+    // using the `throttle` method.
+    if (!this.onScroll) {
+      this.onScroll = this.throttle(this.throttledScrollHandler);
+    }
+
+    // Listen to scroll events to continuously update the collection
+    this.registerScrollEvent();
   },
 
   // Register the event that calls the onScroll method. The default
   // is to listen to the view's own scroll event, but it could just
   // as easily listen to another element's scroll event, too.
   registerScrollEvent() {
-    this.$el.on('scroll', this.onScroll);
+
+    // Execute the throttled callback on scroll
+    this.$el.on('scroll', () => {
+      this.onScroll();
+    });
   },
 
-  // The scroll event is throttled at 60fps. It is recommended
-  // that you use requestAnimationFrame here, if you can, for
-  // a noticeable performance boost.
-  onScroll() {
-    window.setTimeout(() => {
-      this._onScroll();
-    }, 1000/60);
+  // What we use to throttle the scroll event. Use
+  // requestAnimationFrame for better performance
+  throttle(cb) {
+    return _.throttle(cb, 1000/60);
   },
 
   // Called at 60fps within the scroll handler
-  _onScroll() {
+  throttledScrollHandler() {
 
     // Pass along our arguments to the methods that calculate our boundaries
     var lowerBound = this.getLowerBound(...arguments);
@@ -75,9 +86,8 @@ Mn.SlidingView = Mn.CollectionView.extend({
     this.upperBound = upperBound;
 
     // Defer an update for 50ms. This prevents many renders when scrolling fast.
-    var self = this;
-    this._deferredUpdateId = setTimeout(function() {
-      self._updateCollection();
+    this._deferredUpdateId = setTimeout(() => {
+      this._updateCollection();
     }, 50);
   },
 

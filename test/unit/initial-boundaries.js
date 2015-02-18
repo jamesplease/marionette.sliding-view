@@ -1,5 +1,3 @@
-/* jshint debug: true */
-
 var SlidingView, slidingView, collection;
 
 describe('Initial boundaries', () => {
