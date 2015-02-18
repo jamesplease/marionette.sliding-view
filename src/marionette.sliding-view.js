@@ -27,7 +27,7 @@ Mn.SlidingView = Mn.CollectionView.extend({
     this._upperBound = _.result(this, 'initialUpperBound');
     this._updateCollection();
 
-    // If no throttled scroll handler was defined, then we set one
+    // If no onUpdateEvent was defined, then we set one
     // using the `throttle` method.
     if (!this.onUpdateEvent) {
       this.onUpdateEvent = this.throttle(this.throttledUpdateHandler);
@@ -49,7 +49,8 @@ Mn.SlidingView = Mn.CollectionView.extend({
   },
 
   // What we use to throttle the update event callback. Use
-  // requestAnimationFrame for better performance
+  // requestAnimationFrame in your `onUpdateEvent` callback
+  // for better performance
   throttle(cb) {
     return _.throttle(cb, 1000/60);
   },
