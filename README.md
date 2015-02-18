@@ -65,7 +65,7 @@ the SlidingView listens to `scroll` events on its own element. By overriding thi
 you could make it update its collection when another element (like a parent) is scrolled,
 or any time any event occurs.
 
-When overriding this method, use the `onUpdateHandler` method as your callback for the event.
+When overriding this method, use the `onUpdateEvent` method as your callback for the event.
 
 ```js
 var MySlidingView = Mn.SlidingView.extend({
@@ -97,18 +97,16 @@ var MySlidingView = Mn.SlidingView.extend({
 
   // Use requestAnimationFrame for a big performance boost!
   onUpdateEvent: function() {
-    var self = this;
-    requestAnimationFrame(function() {
-      self.throttledUpdateHandler();
-    });
+    requestAnimationFrame(this.throttledUpdateHandler);
   }
 });
 ```
 
 ##### `throttledUpdateHandler()`
 
-This is the method that makes the SlidingView work so efficiently. It is not recommended that you override this
-method. It should only be used when defining a custom `onUpdateEvent` method.
+This is the method that contains all of the logic for the intelligent SlidingView updates. It is
+not recommended that you override this method. You only need to do anything with it when defining
+a custom `onUpdateEvent` method.
 
 ##### `throttle( fn )`
 
