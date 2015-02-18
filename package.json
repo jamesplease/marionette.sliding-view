@@ -72,7 +72,6 @@
     "run-sequence": "^1.0.2",
     "sinon": "^1.12.2",
     "sinon-chai": "^2.6.0",
-    "underscore": "^1.7.0",
     "vinyl-source-stream": "^1.0.0"
   },
   "babelBoilerplateOptions": {

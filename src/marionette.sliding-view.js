@@ -22,11 +22,11 @@ Mn.SlidingView = Mn.CollectionView.extend({
     // option, if one was
     this.collection = new Backbone.Collection();
 
-    Mn.CollectionView.prototype.constructor(this, ...arguments);
+    Mn.CollectionView.prototype.constructor.apply(this, arguments);
 
     // Get our initial boundaries, and then update the collection
-    this.lowerBound = this.getInitialLowerBound(...arguments);
-    this.upperBound = this.getInitialUpperBound(...arguments);
+    this.lowerBound = _.result(this, 'initialLowerBound');
+    this.upperBound = _.result(this, 'initialUpperBound');
     this._updateCollection();
 
     // If no throttled scroll handler was defined, then we set one
@@ -88,10 +88,6 @@ Mn.SlidingView = Mn.CollectionView.extend({
       this._updateCollection();
     }, 50);
   },
-
-  // Get our initial boundaries
-  getInitialLowerBound() {},
-  getInitialUpperBound() {},
 
   // The methods that determine our boundaries with each
   // 'update' (typically the scroll event)
