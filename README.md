@@ -9,49 +9,52 @@ A simple sliding Collection View in Marionette.
 
 ### Motivation
 
-Some Collections contain many, many items, and rendering them all at once with a Marionette.CollectionView
-can take far too long. A 'sliding' CollectionView only displays some of the models at once (typically, only those
+Some Collections contain many, many items, and rendering them all at once with a CollectionView
+can take a very long time. A 'sliding' CollectionView only displays some of the models at once (typically, only those
 visible), giving you fast load times even as the number of items goes into the tens of thousands.
 
 ### Getting Started
 
 This is a more complex view class. Accordingly, it may take some time to fully understand the API it provides.
-Once you've got it down, though, you should find that it's a really powerful View to use in your applications.
+Once you've got it down, though, you should find that it's a really powerful tool.
 
 #### Concepts
 
-There are a few important concepts to understand when using the SlidingView.
+Understanding a few core concepts will help you to use the SlidingView.
 
 ##### Reference Collection
 
 A SlidingView has two collections: `collection` and `referenceCollection`. The `collection`
-represents the models that are currently being displayed. The `referenceCollection` is the
+represents only the models that are *currently* being displayed. The `referenceCollection` is the
 full list of models that the SlidingView represents.
 
 ##### Update Event
 
-The SlidingView updates what is displayed whenever the "update event" occurs. By default,
-the "update event" is the scroll event on the SlidingView's element.
+The SlidingView determines if it needs to change the models that are displayed whenever the "update event"
+occurs. By default, the "update event" is the scroll event on the SlidingView's element.
 
-Although the update event is typically a scroll event, it could be anything at all.
+Although in most cases the update event is typically a scroll event, it could be anything.
 
 ##### Lower and Upper Boundaries
 
-The SlidingView has two internal properties: `lowerBound` and `upperBound`. These
+The SlidingView has two internal properties, called the `lowerBound` and `upperBound`. These
 are two properties that can be used to determine which models from the reference collection
 should be displayed at any given time.
 
 There are two hooks that are used to set the boundaries, and they are called everytime that
 the update event occurs.
 
+In the simplest case, the boundaries will be indices that represent which indices to `slice`
+the `referenceCollection` at.
+
 ### API
 
 ##### `constructor( [options] )`
 
 A `CollectionView` typically receives a `collection` as an option. SlidingView is different in that you
-**do not** pass in a `collection`. Instead, pass in a `referenceCollection`. This is the full list
-of models. The `collection` attribute will be created for you, and will be kept up-to-date with the
-current models to display in the View.
+**do not** pass in a `collection`. Instead, pass it in as the option `referenceCollection`. While the
+`referenceCollection` represents the full list of models, the `collection` attribute will be created for
+you, and will be kept up-to-date with the current models that are displayed in the View.
 
 You can either pass the `referenceCollection` as an option, or specify it on the prototype.
 
@@ -67,10 +70,10 @@ When overriding this method, use the `onUpdateHandler` method as your callback f
 ```js
 var MySlidingView = Mn.SlidingView.extend({
 
-  // Listen to the scroll event on a Radio channel
+  // Update whenever a model changes
   registerScrollEvent: function() {
     var self = this;
-    this.listenTo(Backbone.Radio.channel('parentView'), 'scroll', function() {
+    this.listenTo(someModel, 'change', function() {
       self.onUpdateEvent();
     });
   }
@@ -81,7 +84,7 @@ var MySlidingView = Mn.SlidingView.extend({
 
 A callback that is executed every time the registered update event happens. The purpose
 of this callback is to throttle the *true* callback to the event, which is
-`throttledScrollHandler`.
+`throttledUpdateHandler`.
 
 The default behavior is to throttle the `throttledUpdateHandler` method using the `throttle`
 method on the SlidingView.
@@ -96,11 +99,16 @@ var MySlidingView = Mn.SlidingView.extend({
   onUpdateEvent: function() {
     var self = this;
     requestAnimationFrame(function() {
-      self.throttledScrollHandler();
+      self.throttledUpdateHandler();
     });
   }
 });
 ```
+
+##### `throttledUpdateHandler()`
+
+This is the method that makes the SlidingView work so efficiently. It is not recommended that you override this
+method. It should only be used when defining a custom `onUpdateEvent` method.
 
 ##### `throttle( fn )`
 
