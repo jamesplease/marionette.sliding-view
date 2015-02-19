@@ -1,0 +1,36 @@
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 500px;
+  width: 400px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  overflow: scroll;
+}
+
+.data-container {
+  position: relative;
+  width: 100%;
+  height: 350000px;
+  min-height: 10px;
+}
+
+.employee-view {
+  width: 100%;
+  position: absolute;
+  height: 35px;
+  border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
+}
