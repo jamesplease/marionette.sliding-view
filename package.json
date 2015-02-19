@@ -1,6 +1,6 @@
 {
   "name": "marionette.sliding-view",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A sliding Collection View in Marionette.",
   "main": "dist/marionette.sliding-view.js",
   "scripts": {

@@ -21,7 +21,7 @@
       }
 
       // Set the collection to be a new empty collection
-      this.collection = new Backbone.Collection();
+      this.collection = new this.collectionClass();
 
       Mn.CollectionView.prototype.constructor.apply(this, arguments);
 
@@ -39,6 +39,8 @@
       // Listen to scroll events to continuously update the collection
       this.registerUpdateEvent();
     },
+
+    collectionClass: Backbone.Collection,
 
     // Register the event that calls the onUpdateEvent method. The default
     // is to listen to the view's own scroll event, but it could just
