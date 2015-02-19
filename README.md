@@ -58,6 +58,12 @@ you, and will be kept up-to-date with the current models that are displayed in t
 
 You can either pass the `referenceCollection` as an option, or specify it on the prototype.
 
+##### `collectionClass`
+
+The Class of Collection that the SlidingView will instantiate to serve as its Collection. The default
+value is just `Backbone.Collection`, and, generally, you won't need to override this. Keep in mind that the
+models in this collection instance are the same models that exist in the `referenceCollection`.
+
 ##### `registerUpdateEvent()`
 
 A hook that lets you register when to call the `onUpdateEvent` method. By default,
