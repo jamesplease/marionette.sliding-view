@@ -1,6 +1,6 @@
 var SlidingView, slidingView, collection, clock;
 
-describe('When boundary methods are specified, and the throttled method is called', () => {
+describe('When boundary methods are specified with a custom comparator, and the throttled method is called', () => {
   beforeEach(() => {
     clock = sinon.useFakeTimers();
 
@@ -8,16 +8,32 @@ describe('When boundary methods are specified, and the throttled method is calle
 
     SlidingView = Mn.SlidingView.extend({
       initialLowerBound() {
-        return 0;
+        return {
+          index: 0,
+          timestamp: 100000
+        };
       },
       initialUpperBound() {
-        return 1;
+        return {
+          index: 1,
+          timestamp: 120000
+        };
       },
       getLowerBound() {
-        return 1;
+        return {
+          index: 1,
+          timestamp: 120000
+        };
       },
       getUpperBound() {
-        return 2;
+        return {
+          index: 2,
+          timestamp: 140000
+        };
+      },
+
+      compareBoundaries(a, b) {
+        return a.index === b.index;
       }
     });
 
@@ -25,7 +41,7 @@ describe('When boundary methods are specified, and the throttled method is calle
       referenceCollection: collection
     });
 
-    stub(slidingView, 'getUpperBound');
+    spy(slidingView, 'getUpperBound');
     spy(slidingView, '_updateCollection');
   });
 
@@ -33,7 +49,7 @@ describe('When boundary methods are specified, and the throttled method is calle
     clock.restore();
   });
 
-  describe('and no time has passed', () => {
+  describe('and no time has passing', () => {
     beforeEach(() => {
       slidingView.throttledUpdateHandler();
     });
@@ -45,7 +61,10 @@ describe('When boundary methods are specified, and the throttled method is calle
     it('should pass the lower bound to the upperBound call', () => {
       expect(slidingView.getUpperBound)
         .to.have.been.calledOnce
-        .and.calledWith(1);
+        .and.calledWith({
+          index: 1,
+          timestamp: 120000
+        });
     });
   });
 
@@ -93,10 +112,16 @@ describe('When boundary methods are specified, and the throttled method is calle
     beforeEach(() => {
       var count = 0;
       slidingView.getLowerBound = function() {
-        return ++count;
+        return {
+          index: ++count,
+          timestamp: 120000
+        };
       };
       slidingView.getUpperBound = function() {
-        return ++count;
+        return {
+          index: ++count,
+          timestamp: 120000
+        };
       };
 
       spy(global, 'clearTimeout');
