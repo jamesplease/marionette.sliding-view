@@ -2,6 +2,11 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import Mn from 'backbone.marionette';
 
+// Similar to _.result, but it passes additional arguments when the property is a method
+function execute(target, prop, ...args) {
+  return _.isFunction(target[prop]) ? target[prop](...args) : target[prop];
+}
+
 Mn.SlidingView = Mn.CollectionView.extend({
   constructor(options = {}) {
 
@@ -24,9 +29,7 @@ Mn.SlidingView = Mn.CollectionView.extend({
 
     // Get our initial boundaries, and then update the collection
     this._lowerBound = _.result(this, 'initialLowerBound');
-    this._upperBound = _.isFunction(this.initialUpperBound) ?
-      this.initialUpperBound(this._lowerBound) :
-      this.initialUpperBound;
+    this._upperBound = execute(this, 'initialUpperBound', this._lowerBound);
 
     this._updateCollection();
 
