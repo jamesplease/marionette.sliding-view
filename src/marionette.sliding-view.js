@@ -2,6 +2,11 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import Mn from 'backbone.marionette';
 
+// Similar to _.result, but it passes additional arguments when the property is a method
+function execute(target, prop, ...args) {
+  return _.isFunction(target[prop]) ? target[prop](...args) : target[prop];
+}
+
 Mn.SlidingView = Mn.CollectionView.extend({
   constructor(options = {}) {
 
@@ -24,9 +29,7 @@ Mn.SlidingView = Mn.CollectionView.extend({
 
     // Get our initial boundaries, and then update the collection
     this._lowerBound = _.result(this, 'initialLowerBound');
-    this._upperBound = _.isFunction(this.initialUpperBound) ?
-      this.initialUpperBound(this._lowerBound) :
-      this.initialUpperBound;
+    this._upperBound = execute(this, 'initialUpperBound', this._lowerBound);
 
     this._updateCollection();
 
@@ -52,6 +55,11 @@ Mn.SlidingView = Mn.CollectionView.extend({
       this.onUpdateEvent();
     });
   },
+
+  // Whether or not the latest scroll was small enough to be rendered
+  // immediately. Accepts a function argument that receives the old and
+  // new boundaries as an object. Refer to the docs for more.
+  isSmallChange: false,
 
   // This method is used to determine whether or not the boundaries have changed since the
   // last scroll event.
@@ -94,14 +102,27 @@ Mn.SlidingView = Mn.CollectionView.extend({
       return;
     }
 
-    // Update our indices
+    var oldLowerBound = this._lowerBound;
+    var oldUpperBound = this._upperBound;
     this._lowerBound = lowerBound;
     this._upperBound = upperBound;
 
-    // Defer an update for 50ms. This prevents many renders when scrolling fast.
-    this._deferredUpdateId = setTimeout(() => {
+    // Determine if the change is small enough to be rendered immediately
+    var isSmallChange = execute(this, 'isSmallChange', {
+      oldLowerBound, oldUpperBound,
+      lowerBound, upperBound
+    });
+
+    if (isSmallChange) {
       this._updateCollection();
-    }, 50);
+    }
+
+    // Defer an update for 50ms. This prevents many renders when scrolling fast.
+    else {
+      this._deferredUpdateId = setTimeout(() => {
+        this._updateCollection();
+      }, 50);
+    }
   },
 
   // The methods that determine our boundaries with each
