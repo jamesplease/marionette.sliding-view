@@ -7,6 +7,8 @@
 
 A sliding Collection View in Marionette.
 
+[**View example.**](http://jmeas.github.io/marionette.sliding-view/examples/simple-list.html)
+
 ### Motivation
 
 Some Collections contain many, many items, and rendering them all at once with a CollectionView
