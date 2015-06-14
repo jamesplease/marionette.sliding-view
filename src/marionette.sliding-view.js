@@ -27,6 +27,7 @@ Mn.SlidingView = Mn.CollectionView.extend({
     this._upperBound = _.isFunction(this.initialUpperBound) ?
       this.initialUpperBound(this._lowerBound) :
       this.initialUpperBound;
+
     this._updateCollection();
 
     // If no onUpdateEvent was defined, then we set one
@@ -52,9 +53,20 @@ Mn.SlidingView = Mn.CollectionView.extend({
     });
   },
 
+  // This method is used to determine whether or not the boundaries have changed since the
+  // last scroll event.
+  // When dealing more complex charts or visualizations you may use something other than a flat value
+  // for your boundaries. Consider if your boundaries are JavaScript objects. This method lets you determine
+  // how equality should be calculated.
+  compareBoundaries(a, b) {
+    return a === b;
+  },
+
   // What we use to throttle the update event callback. Use
   // requestAnimationFrame in your `onUpdateEvent` callback
-  // for better performance
+  // for better performance. Refer to this blog post:
+  // http://www.html5rocks.com/en/tutorials/speed/animations/
+  // for proper use of rAF.
   throttle(cb) {
     return _.throttle(cb, 1000/60);
   },
@@ -71,14 +83,14 @@ Mn.SlidingView = Mn.CollectionView.extend({
     // that queued render. This prevents users who are scrolling very fast
     // from getting too many renders at once. It won't render until they've
     // slowed down a bit.
-    if (lowerBound !== this._lowerBound || upperBound !== this._upperBound) {
+    if (!this.compareBoundaries(lowerBound, this._lowerBound) || !this.compareBoundaries(upperBound, this._upperBound)) {
       if (this._deferredUpdateId) {
         clearTimeout(this._deferredUpdateId);
       }
     }
 
     // If the boundaries are unchanged, then we bail out early
-    if (lowerBound === this._lowerBound && upperBound === this._upperBound) {
+    if (this.compareBoundaries(lowerBound, this._lowerBound) && this.compareBoundaries(upperBound, this._upperBound)) {
       return;
     }
 

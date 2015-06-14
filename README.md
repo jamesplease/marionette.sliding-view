@@ -170,3 +170,10 @@ you should calculate the new value of the `lowerBound` and return it.
 
 Similar to the above, but for the upper boundary. It is passed the `lowerBound` that
 was just computed, if you need to use that as a reference.
+
+##### `compareBoundaries( a, b )`
+
+This method is used to determine whether or not two boundaries are equal. The default implementation is
+simply `a === b`, which works if you're using simple boundaries, like numbers or strings. Sometimes, though,
+more complex charts or grids require returning JavaScript Objects as boundaries. This hook allows you to
+define how those Objects should be compared.
