@@ -24,7 +24,9 @@ Mn.SlidingView = Mn.CollectionView.extend({
 
     // Get our initial boundaries, and then update the collection
     this._lowerBound = _.result(this, 'initialLowerBound');
-    this._upperBound = _.result(this, 'initialUpperBound');
+    this._upperBound = _.isFunction(this.initialUpperBound) ?
+      this.initialUpperBound(this._lowerBound) :
+      this.initialUpperBound;
     this._updateCollection();
 
     // If no onUpdateEvent was defined, then we set one
