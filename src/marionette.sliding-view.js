@@ -56,6 +56,11 @@ Mn.SlidingView = Mn.CollectionView.extend({
     });
   },
 
+  // Whether or not the latest scroll was small enough to be rendered
+  // immediately. Accepts a function argument that receives the old and
+  // new boundaries as an object. Refer to the docs for more.
+  isSmallChange: false,
+
   // This method is used to determine whether or not the boundaries have changed since the
   // last scroll event.
   // When dealing more complex charts or visualizations you may use something other than a flat value
@@ -97,14 +102,27 @@ Mn.SlidingView = Mn.CollectionView.extend({
       return;
     }
 
-    // Update our indices
+    var oldLowerBound = this._lowerBound;
+    var oldUpperBound = this._upperBound;
     this._lowerBound = lowerBound;
     this._upperBound = upperBound;
 
-    // Defer an update for 50ms. This prevents many renders when scrolling fast.
-    this._deferredUpdateId = setTimeout(() => {
+    // Determine if the change is small enough to be rendered immediately
+    var isSmallChange = execute(this, 'isSmallChange', {
+      oldLowerBound, oldUpperBound,
+      lowerBound, upperBound
+    });
+
+    if (isSmallChange) {
       this._updateCollection();
-    }, 50);
+    }
+
+    // Defer an update for 50ms. This prevents many renders when scrolling fast.
+    else {
+      this._deferredUpdateId = setTimeout(() => {
+        this._updateCollection();
+      }, 50);
+    }
   },
 
   // The methods that determine our boundaries with each
