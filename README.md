@@ -149,14 +149,15 @@ var MySlidingView = Mn.SlidingView.extend({
 });
 ```
 
-##### `initialUpperBound`
+##### `initialUpperBound( initialLowerBound )`
 
-The initial upper boundary for the SlidingView. It can be a flat value or a function.
+The initial upper boundary for the SlidingView. It can be a flat value or a function. When a
+function is provided, it will be passed the initial lower boundary.
 
 ```js
 var MySlidingView = Mn.SlidingView.extend({
-  initialLowerBound: function() {
-    return 5;
+  initialLowerBound: function(initialLowerBound) {
+    return initialLowerBound + 5;
   }
 });
 ```
@@ -177,3 +178,29 @@ This method is used to determine whether or not two boundaries are equal. The de
 simply `a === b`, which works if you're using simple boundaries, like numbers or strings. Sometimes, though,
 more complex charts or grids require returning JavaScript Objects as boundaries. This hook allows you to
 define how those Objects should be compared.
+
+##### `isSmallChange( boundaries )`
+
+`isSmallChange` determines whether the render will occur instantly or if it will be delayed. The delay prevents too many
+items from being rendered at a single time, which greatly improves performance.
+
+`isSmallChange` can be provided as a flat value or as a function. When a function is provided, it is passed an object with
+four properties:
+
+- `oldLowerBound` - The previous lower boundary
+- `oldUpperBound` - The previous upper boundary
+- `lowerBound` - The new lower boundary
+- `upperBound` - The new upper boundary
+
+If your boundaries are indices, you might implement an `isSmallChange` method like so:
+
+```js
+isSmallChange: function(bounds) {
+  var lowerBoundDiff = Math.abs(bounds.oldLowerBound - bounds.lowerBound);
+  var upperBoundDiff = Math.abs(bounds.oldUpperBound - bounds.upperBound);
+
+  // This means that anytime less than 6 items are added/removed we will render
+  // immediately rather than waiting 50ms
+  return lowerBoundDiff + upperBoundDiff < 6;
+}
+```
